@@ -3,6 +3,8 @@ JVTK
 
 Swing based [VTK](http://www.vtk.org/) Panel (supports transparency and fullscreen mode).
 
+Webpage: http://miho.github.com/JVTK
+
 ## Dependencies
 
 - VTK 5.10
