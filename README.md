@@ -20,7 +20,7 @@ VTK_WRAP_JAVA=ON
 CMAKE_BUILD_TYPE=Release
 ```
 
-- Copy the content of `$VTKBUILD/bin` to `JVTK/natives` where `$VTKBUILD` is the location of the VTK build folder
+- Copy the content of `$VTKBUILD/bin` to `JVTK/natives` (`$VTKBUILD` is the location of the VTK build folder)
 
 - Open the `JVTK` project with NetBeans and compile (necessary preferences are already defined)
 
