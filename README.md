@@ -28,3 +28,9 @@ CMAKE_BUILD_TYPE=Release
 ## Usage
 
 - Open the `JVTK` project with NetBeans and run it.
+- Press the `Increase Alpha` and `Decrease Alpha` buttons to change transparency
+- Double-Click to enter fullscreen mode
+- Double-Click again or press `ESC` to leave fullscreen mode
+
+> **NOTE**
+> In fullscreen mode rendering is done with maximum performance as native rendering is used.
