@@ -18,7 +18,7 @@ This is relatively efficient. In addition to that a fullscreen mode has been imp
 ## Dependencies
 
 - VTK 5.10
-- C++ Compiler, CMake (see [VTK](http://www.vtk.org/) documentation for details)
+- C++ Compiler, CMake (see [VTK documentation](http://www.vtk.org/Wiki/VTK#Building_VTK) for details)
 - Java 1.6
 - Netbeans 7.1 (optional)
 
