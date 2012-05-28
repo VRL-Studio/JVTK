@@ -5,6 +5,16 @@ Swing based [VTK](http://www.vtk.org/) Panel (supports transparency and fullscre
 
 Webpage: http://miho.github.com/JVTK
 
+## Why this project?
+
+The Java binding of VTK only provides heavyweight AWT based UI components. This has been done due to performance
+issues when accessing the native render data from Java. In some cases however, it is necessary to use real Swing components
+(lightweight). This allows for component layers (components can be rendered on top of the VTK component),
+transparency and many other features.
+
+This project addresses the performance issue with custom color and sample model which allow for direct image conversion.
+This is relatively efficient. In addition to that a fullscreen mode has been implemented to gain full render performance.
+
 ## Dependencies
 
 - VTK 5.10
