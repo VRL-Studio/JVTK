@@ -8,6 +8,7 @@ Webpage: http://miho.github.com/JVTK
 ## Dependencies
 
 - VTK 5.10
+- C++ Compiler, CMake (see [VTK](http://www.vtk.org/) documentation for details)
 - Java 1.6
 - Netbeans 7.1 (optional)
 
