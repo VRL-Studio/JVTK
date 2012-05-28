@@ -1,7 +1,7 @@
 JVTK
 ====
 
-Swing based [VTK](http://www.vtk.org/) Panel (supports transparency and fullscreen mode)
+Swing based [VTK](http://www.vtk.org/) Panel (supports transparency and fullscreen mode).
 
 ## Dependencies
 
