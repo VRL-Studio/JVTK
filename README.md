@@ -3,6 +3,8 @@ JVTK
 
 Swing based [VTK](http://www.vtk.org/) Panel (supports transparency and fullscreen mode).
 
+![Screenshot](JVTK/resources/screenshot01.png "Screenshot")
+
 ## Dependencies
 
 - VTK 5.10
