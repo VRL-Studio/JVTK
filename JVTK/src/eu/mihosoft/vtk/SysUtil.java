@@ -39,9 +39,16 @@ import vtk.vtkNativeLibrary;
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public class SysUtil {
-    
+
+    public static final String OS_LINUX = "Linux";
+    public static final String OS_MAC = "Mac OS X";
+    public static final String OS_WINDOWS = "Windows";
+    public static final String OS_OTHER = "Other";
+    public static final String[] SUPPORTED_OPERATING_SYSTEMS = {OS_LINUX, OS_MAC, OS_WINDOWS};
+
     /**
      * Loads native vtk libraries from the specified path.
+     *
      * @param path path where the native vtk libraries are located
      */
     public static void loadLibraries(String path) {
@@ -64,14 +71,14 @@ public class SysUtil {
 
         vtkNativeLibrary.DisableOutputWindow(null);
     }
-    
+
     /**
      * Adds a folder path to the native library path.
      *
      * @param path path to add
      * @throws IOException
      */
-     private static void addNativeLibraryPath(String path) throws IOException {
+    private static void addNativeLibraryPath(String path) throws IOException {
         try {
             // This enables the java.library.path to be modified at runtime
             // Idea comes from a Sun engineer at
@@ -97,5 +104,40 @@ public class SysUtil {
         } catch (NoSuchFieldException e) {
             throw new IOException("Failed to get field handle to set library path");
         }
+    }
+
+    /**
+     * <p> Returns the OS name. If the OS is not supported, "Other" will be
+     * returned. </p> <p> <b>Note:</b> in contrary to
+     * <code>System.getProprty()</code> only the base name will be returned. See {@link #SUPPORTED_OPERATING_SYSTEMS}.
+     * </p>
+     *
+     * @return the OS name
+     */
+    public static String getOS() {
+        String result = OS_OTHER;
+
+        String osName = System.getProperty("os.name");
+
+        for (String s : SUPPORTED_OPERATING_SYSTEMS) {
+            if (osName.contains(s)) {
+                result = s;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    public static boolean isWindows() {
+        return getOS().equals(OS_WINDOWS);
+    }
+
+    public static boolean isMacOSX() {
+        return getOS().equals(OS_MAC);
+    }
+
+    public static boolean isLinux() {
+        return getOS().equals(OS_LINUX);
     }
 }

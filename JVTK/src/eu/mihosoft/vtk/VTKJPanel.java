@@ -70,7 +70,7 @@ public class VTKJPanel extends JPanel
     //
     //fullscreen component
     //
-    private JFrame window;
+    private Window window;
     //
     // offscreen image
     private Image img;
@@ -127,11 +127,16 @@ public class VTKJPanel extends JPanel
         ren = panel.GetRenderer();
 
         // create the window
-        window = new JFrame();
-        window.setUndecorated(true);
+        if (SysUtil.isMacOSX()) {
+            window = new JWindow();
+        } else {
+            window = new JFrame();
+            ((JFrame) window).setUndecorated(true);
+
+        }
 
         // we add the panel to give it access to native memory etc.
-        window.getContentPane().add(panel);
+        window.add(panel);
 
         // unfortunately a window has to be visible to be initialized.
         // that is why we toggle visibility
