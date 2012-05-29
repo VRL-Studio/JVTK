@@ -135,27 +135,7 @@ public class VTKJPanel extends JPanel
 
         }
 
-        // unfortunately a window has to be visible to be initialized.
-        // that is why we toggle visibility
-        // this window does not have a title bar and is not visible (hopefully)
-        window.setVisible(true);
-        
-        // linux:
-        // we must ensure that the window gets painted at least once with
-        // width and height > 0
-        window.setSize(1, 1);
-        window.repaint();
-        
-        // now we can hide the window
-        window.setVisible(false);
-
-        // we add the panel to give it access to native memory etc.
-        window.add(panel);
-
-        // we force render
-        contentChanged();
-
-
+        initWindow();
 
         // double click will leave fullscreen mode
         panel.addMouseListener(new MouseAdapter() {
@@ -177,10 +157,6 @@ public class VTKJPanel extends JPanel
         setOpaque(true);
     }
 
-//    public void init() {
-//        
-//
-//    }
     /**
      * Leaves fullscreen mode.
      */
@@ -528,6 +504,42 @@ public class VTKJPanel extends JPanel
         this.contentAlpha = contentAlpha;
         contentChanged();
     }
+    
+     /****************************************************
+     *       !!!  CAUTION: UGLY METHODS BELOW  !!!       *
+     ****************************************************/
+    
+    /**
+     * Initializes the internal window.
+     */
+    private void initWindow() {
+        // we add the panel to give it access to native memory etc.
+        window.add(panel);
+
+        // unfortunately a window has to be visible to be initialized.
+        // that is why we toggle visibility
+        // this window does not have a title bar and is not visible (hopefully)
+        window.setVisible(true);
+
+        // linux:
+        // we must ensure that the window gets painted at least once with
+        // width and height > 0
+        window.setSize(1, 1);
+
+        // I am so unhappy with this :(
+        for (int i = 0; i < 15; i++) {
+            window.paint(window.getGraphics());
+        }
+
+        // now we can hide the window
+        GraphicsUtil.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                window.setVisible(false);
+            }
+        });
+    }
 
     /**
      * Repairs the visual appearance of this panel.
@@ -544,7 +556,7 @@ public class VTKJPanel extends JPanel
 
                     @Override
                     public void run() {
-                        render();
+                        contentChanged();
                         repaint();
                     }
                 });
