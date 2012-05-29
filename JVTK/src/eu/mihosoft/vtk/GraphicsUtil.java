@@ -125,7 +125,7 @@ public class GraphicsUtil {
             frame.setVisible(true);
 //            frame.setBounds(bounds);
             if (nativeSupport) {
-                System.err.println("Full-screen mode not supported");
+                System.err.println("Fullscreen mode not supported");
             }
         }//end else
     }
@@ -164,7 +164,7 @@ public class GraphicsUtil {
             frame.validate();
 
         } else {
-            System.out.println("Full-screen mode not supported");
+            System.out.println("Fullscreen mode not supported");
         }//end else
     }
     

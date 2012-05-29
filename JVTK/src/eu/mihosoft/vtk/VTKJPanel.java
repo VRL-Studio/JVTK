@@ -34,10 +34,12 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 import sun.awt.image.ByteInterleavedRaster;
+import vtk.vtkPanel;
 import vtk.vtkRenderWindow;
 import vtk.vtkRenderer;
 import vtk.vtkUnsignedCharArray;
@@ -63,12 +65,12 @@ public class VTKJPanel extends JPanel
     // vtk objects
     //
     private vtkRenderWindow rw;
-    private VTKPanel panel;
+    private vtkPanel panel;
     private vtkRenderer ren;
     //
     //fullscreen component
     //
-    private JWindow window;
+    private JFrame window;
     //
     // offscreen image
     private Image img;
@@ -108,7 +110,7 @@ public class VTKJPanel extends JPanel
     public VTKJPanel() {
 
         // panel wich leaves fullscreen if ESC is pressed
-        panel = new VTKPanel() {
+        panel = new vtkPanel() {
 
             @Override
             public void keyPressed(KeyEvent e) {
@@ -121,8 +123,12 @@ public class VTKJPanel extends JPanel
             }
         };
 
+        rw = panel.GetRenderWindow();
+        ren = panel.GetRenderer();
+
         // create the window
-        window = new JWindow();
+        window = new JFrame();
+        window.setUndecorated(true);
 
         // we add the panel to give it access to native memory etc.
         window.getContentPane().add(panel);
@@ -132,9 +138,9 @@ public class VTKJPanel extends JPanel
         // this window does not have a title bar this is not visible (hopefully)
         window.setVisible(true);
         window.setVisible(false);
-
-        rw = panel.GetRenderWindow();
-        ren = panel.GetRenderer();
+        
+        // we force render
+        contentChanged();
 
         // double click will leave fullscreen mode
         panel.addMouseListener(new MouseAdapter() {
@@ -156,6 +162,10 @@ public class VTKJPanel extends JPanel
         setOpaque(true);
     }
 
+//    public void init() {
+//        
+//
+//    }
     /**
      * Leaves fullscreen mode.
      */
@@ -232,18 +242,23 @@ public class VTKJPanel extends JPanel
         if (window != null && !isFullscreen) {
             window.setSize(w, h);
         }
-        render();
-        repaint();
+
+        contentChanged();
     }
 
     /**
      * Renders this panel.
      */
     private synchronized void render() {
+        panel.lock();
+
         panel.Render();
         renderContent = ren.VisibleActorCount() > 0;
         updateImage();
         contentChanged = false;
+
+        panel.unlock();
+
     }
 
     /**
@@ -489,7 +504,7 @@ public class VTKJPanel extends JPanel
 
     /**
      * Returns the content alpha value (defines transparency of vtk content).
-     * 
+     *
      * A value of 1.f means full opacity, 0.0f full transparency.
      *
      * @return the content alpha
@@ -500,7 +515,7 @@ public class VTKJPanel extends JPanel
 
     /**
      * Defines the content alpha value (defines transparency of vtk content).
-     * 
+     *
      * A value of 1.f means full opacity, 0.0f full transparency.
      *
      * @param contentAlpha the content alpha to set

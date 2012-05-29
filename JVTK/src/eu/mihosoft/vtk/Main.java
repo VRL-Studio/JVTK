@@ -342,7 +342,7 @@ public class Main extends JPanel implements ActionListener {
                 JFrame frame = new JFrame("VTKJPanel Demo");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-                JPanel panel = new Main();
+                Main panel = new Main();
 
                 frame.add(panel, BorderLayout.CENTER);
                 frame.setSize(600, 600);
