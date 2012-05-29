@@ -135,17 +135,21 @@ public class VTKJPanel extends JPanel
 
         }
 
-        // we add the panel to give it access to native memory etc.
-        window.add(panel);
-
         // unfortunately a window has to be visible to be initialized.
         // that is why we toggle visibility
         // this window does not have a title bar and is not visible (hopefully)
         window.setVisible(true);
+        window.setSize(1, 1);
+        window.repaint();
         window.setVisible(false);
+
+        // we add the panel to give it access to native memory etc.
+        window.add(panel);
 
         // we force render
         contentChanged();
+
+
 
         // double click will leave fullscreen mode
         panel.addMouseListener(new MouseAdapter() {
