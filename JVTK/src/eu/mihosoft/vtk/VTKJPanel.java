@@ -95,7 +95,7 @@ public class VTKJPanel extends JPanel
     private boolean renderContent;
     //
     // indicates whether this panel is in fullscreen mode
-    private boolean isFullscreen;
+    private boolean fullscreen;
     //
     // indicates whether the content has changed and whether this component
     // shall be rerendered
@@ -138,7 +138,7 @@ public class VTKJPanel extends JPanel
         // this window does not have a title bar this is not visible (hopefully)
         window.setVisible(true);
         window.setVisible(false);
-        
+
         // we force render
         contentChanged();
 
@@ -172,7 +172,7 @@ public class VTKJPanel extends JPanel
     public void leaveFullscreenMode() {
         GraphicsUtil.leaveFullscreenMode(window);
         window.setVisible(false);
-        isFullscreen = false;
+        fullscreen = false;
 
         this.setSize(1, 1);
         this.revalidate();
@@ -186,8 +186,8 @@ public class VTKJPanel extends JPanel
      */
     public void enterFullscreenMode() {
         GraphicsUtil.enterFullscreenMode(window);
-        isFullscreen = true;
-        this.setSize(getSize());
+        fullscreen = true;
+//        this.setSize(getSize());
     }
 
     /**
@@ -239,11 +239,10 @@ public class VTKJPanel extends JPanel
     @Override
     public void setBounds(int x, int y, int w, int h) {
         super.setBounds(x, y, w, h);
-        if (window != null && !isFullscreen) {
+        if (window != null && !fullscreen) {
             window.setSize(w, h);
+            contentChanged();
         }
-
-        contentChanged();
     }
 
     /**
@@ -258,7 +257,6 @@ public class VTKJPanel extends JPanel
         contentChanged = false;
 
         panel.unlock();
-
     }
 
     /**
@@ -358,7 +356,7 @@ public class VTKJPanel extends JPanel
             at = new AffineTransform(1, 0.0d, 0.0d, -1, 0, height + 1);
 
             // resize hidden frame if not in fullscreen mode
-            if (!isFullscreen) {
+            if (!fullscreen) {
                 window.setSize(getWidth(), getHeight());
             }
         }
@@ -405,15 +403,19 @@ public class VTKJPanel extends JPanel
             enterFullscreenMode();
         }
 
-        panel.mouseClicked(e);
-        render();
+//        render();
+        contentChanged();
         repaint();
+
+        panel.mouseClicked(e);
+
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         panel.mousePressed(e);
-        render();
+//        render();
+        contentChanged();
         repaint();
     }
 
@@ -441,7 +443,8 @@ public class VTKJPanel extends JPanel
     public void mouseDragged(MouseEvent e) {
 
         panel.mouseDragged(e);
-        render();
+//        render();
+        contentChanged();
         repaint();
 
     }
@@ -449,7 +452,8 @@ public class VTKJPanel extends JPanel
     @Override
     public void keyTyped(KeyEvent e) {
         panel.keyReleased(e);
-        render();
+//        render();
+        contentChanged();
         repaint();
     }
 
@@ -460,14 +464,16 @@ public class VTKJPanel extends JPanel
     @Override
     public void keyReleased(KeyEvent e) {
         panel.keyReleased(e);
-        render();
+//        render();
+        contentChanged();
         repaint();
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         panel.keyPressed(e);
-        render();
+//        render();
+        contentChanged();
         repaint();
     }
 
