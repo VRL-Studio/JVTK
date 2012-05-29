@@ -64,9 +64,9 @@ public class VTKJPanel extends JPanel
     //
     // vtk objects
     //
-    private vtkRenderWindow rw;
-    private vtkPanel panel;
-    private vtkRenderer ren;
+    private final vtkRenderWindow rw;
+    private final vtkPanel panel;
+    private final vtkRenderer ren;
     //
     //fullscreen component
     //
@@ -140,7 +140,7 @@ public class VTKJPanel extends JPanel
 
         // unfortunately a window has to be visible to be initialized.
         // that is why we toggle visibility
-        // this window does not have a title bar this is not visible (hopefully)
+        // this window does not have a title bar and is not visible (hopefully)
         window.setVisible(true);
         window.setVisible(false);
 
@@ -283,18 +283,24 @@ public class VTKJPanel extends JPanel
 
         Composite original = g2.getComposite();
 
+        // TODO find out if this condition really improves performance
         if (getContentAlpha() < 1.f) {
             AlphaComposite ac1 =
                     AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                     getContentAlpha());
             g2.setComposite(ac1);
+
+            g2.drawImage(getImage(), 0, 0, /*
+                     * getWidth(), getHeight(),
+                     */ null);
+
+            g2.setComposite(original);
+        } else {
+            g2.drawImage(getImage(), 0, 0, /*
+                     * getWidth(), getHeight(),
+                     */ null);
         }
 
-        g2.drawImage(getImage(), 0, 0, /*
-                 * getWidth(), getHeight(),
-                 */ null);
-
-        g2.setComposite(original);
     }
 
     /**
@@ -491,29 +497,6 @@ public class VTKJPanel extends JPanel
     }
 
     /**
-     * Repairs the visual appearance of this panel.
-     */
-    private void repair() {
-        // This is a hack!
-        // I put his method to the bottom because no one should read its code.
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-
-            @Override
-            public void run() {
-                GraphicsUtil.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        render();
-                        repaint();
-                    }
-                });
-            }
-        }, 10);
-    }
-
-    /**
      * Returns the content alpha value (defines transparency of vtk content).
      *
      * A value of 1.f means full opacity, 0.0f full transparency.
@@ -534,5 +517,28 @@ public class VTKJPanel extends JPanel
     public void setContentAlpha(float contentAlpha) {
         this.contentAlpha = contentAlpha;
         contentChanged();
+    }
+
+    /**
+     * Repairs the visual appearance of this panel.
+     */
+    private void repair() {
+        // This is a hack!
+        // I put his method to the bottom because no one should read its code.
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                GraphicsUtil.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        render();
+                        repaint();
+                    }
+                });
+            }
+        }, 10);
     }
 }
