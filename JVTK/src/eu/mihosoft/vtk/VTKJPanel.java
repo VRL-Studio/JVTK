@@ -34,6 +34,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JWindow;
@@ -504,11 +506,12 @@ public class VTKJPanel extends JPanel
         this.contentAlpha = contentAlpha;
         contentChanged();
     }
-    
-     /****************************************************
-     *       !!!  CAUTION: UGLY METHODS BELOW  !!!       *
-     ****************************************************/
-    
+    //
+    //****************************************************
+    //*       !!! CAUTION: UGLY METHODS BELOW !!!        *
+    //****************************************************
+    //
+
     /**
      * Initializes the internal window.
      */
@@ -521,24 +524,26 @@ public class VTKJPanel extends JPanel
         // this window does not have a title bar and is not visible (hopefully)
         window.setVisible(true);
 
-        // linux:
-        // we must ensure that the window gets painted at least once with
-        // width and height > 0
-        window.setSize(1, 1);
+        // ati on linux sucks!
+        if (SysUtil.isLinux()) {
 
-        // I am so unhappy with this :(
-        for (int i = 0; i < 15; i++) {
-            window.paint(window.getGraphics());
+            // linux:
+            // we must ensure that the window gets painted at least once with
+            // width and height > 0
+            window.setSize(1, 1);
+
+            // I am so unhappy with this :(
+            for (int i = 0; i < 15; i++) {
+                window.paint(window.getGraphics());
+                try {
+                    Thread.sleep(2);
+                } catch (InterruptedException ex) {
+                    // we don't care
+                }
+            }
         }
 
-        // now we can hide the window
-        GraphicsUtil.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                window.setVisible(false);
-            }
-        });
+        window.setVisible(false);
     }
 
     /**
