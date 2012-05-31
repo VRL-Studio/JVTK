@@ -34,7 +34,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Helper functions for native libraries. Based on
+ * Simplifies handling of native libraries, i.e., returning a list of libraries
+ * that are currently loaded.
+ * 
+ * @see http://stackoverflow.com/questions/1007861/how-do-i-get-a-list-of-jni-libraries-which-are-loaded/1008631#1008631
  *
  * @author Michael Hoffer
  */
