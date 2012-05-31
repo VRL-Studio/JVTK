@@ -338,8 +338,6 @@ public class Main extends JPanel implements ActionListener {
 
         String arch = System.getProperty("os.arch");
         System.out.println("ARCH: " + arch);
-
-        SysUtil.loadNativeLibrariesInFolder(path, true);
         
         // we use custom library loading. As we plan to use this project in
         // a flexible plugin based system it is necessary to load native
