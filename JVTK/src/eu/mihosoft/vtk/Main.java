@@ -344,6 +344,8 @@ public class Main extends JPanel implements ActionListener {
         // we use custom library loading. As we plan to use this project in
         // a flexible plugin based system it is necessary to load native
         // libraries without modifying the PATH variable on windows
+        // Question: does Windows really only have one PATH and no library
+        //           path variable? Please tell me if I am wrong.
         System.loadLibrary("jawt");
         SysUtil.loadLibraries(path.getAbsolutePath());
 
