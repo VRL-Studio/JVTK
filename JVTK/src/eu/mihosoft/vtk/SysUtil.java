@@ -28,11 +28,14 @@
 package eu.mihosoft.vtk;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import vtk.vtkNativeLibrary;
 
 /**
  *
@@ -52,14 +55,17 @@ public class SysUtil {
      * @param path path where the native vtk libraries are located
      */
     public static void loadLibraries(String path) {
+
         try {
             SysUtil.addNativeLibraryPath(path);
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        if (!vtkNativeLibrary.LoadAllNativeLibraries()) {
-            for (vtkNativeLibrary lib : vtkNativeLibrary.values()) {
+        loadNativeLibrariesInFolder(new File(path), true);
+
+        if (!vtk.vtkNativeLibrary.LoadAllNativeLibraries()) {
+            for (vtk.vtkNativeLibrary lib : vtk.vtkNativeLibrary.values()) {
                 if (!lib.IsLoaded()) {
                     System.out.println(lib.GetLibraryName() + " not loaded");
                 }
@@ -69,7 +75,173 @@ public class SysUtil {
             System.out.println(System.getProperty("java.library.path"));
         }
 
-        vtkNativeLibrary.DisableOutputWindow(null);
+        vtk.vtkNativeLibrary.DisableOutputWindow(null);
+    }
+
+    /**
+     * Returns the platform specify ending for native dynamic libraries.
+     *
+     * @param os operatin system
+     * @return
+     * <code>so</code> on Linux/Unix,
+     * <code>dll</code> on Windows,
+     * <code>dylib</code> on Mac OS X and
+     * <code>so</code> for other operating system (unsupported)
+     */
+    public static String getPlatformSpecificLibraryEnding(String os) {
+
+        if (os.equals(OS_MAC)) {
+            return "dylib";
+        } else if (os.equals(OS_LINUX)) {
+            return "so";
+        } else if (os.equals(OS_WINDOWS)) {
+            return "dll";
+        }
+
+        // for other assuming posix complient
+        return "so";
+    }
+
+    /**
+     * Returns the platform specify ending for native dynamic libraries.
+     *
+     * @return
+     * <code>so</code> on Linux/Unix,
+     * <code>dll</code> on Windows,
+     * <code>dylib</code> on Mac OS X and
+     * <code>so</code> for other operating system (unsupported)
+     */
+    public static String getPlatformSpecificLibraryEnding() {
+        return getPlatformSpecificLibraryEnding(getOS());
+    }
+
+    /**
+     * Loads all native librarties in the specified folder and optionally all of
+     * its subfolders. Please ensure that all libraries in the folder are
+     * compatible with the current os.
+     *
+     * @param folder library folder
+     * @param recursive defines whether recusrively load libraries from sub
+     * folders
+     *
+     * @return
+     * <code>true</code> if all native libraries could be loaded;
+     * <code>false</code> otherwise
+     */
+    public static boolean loadNativeLibrariesInFolder(File folder, boolean recursive) {
+//        VParamUtil.throwIfNotValid(
+//                VParamUtil.VALIDATOR_EXISTING_FOLDER, folder);
+
+        final String dylibEnding = getPlatformSpecificLibraryEnding();
+
+        Collection<File> dynamicLibraries = new ArrayList<File>();
+
+        if (recursive) {
+            dynamicLibraries.addAll(
+                    listFiles(folder, new String[]{dylibEnding}));
+        } else {
+            File[] libFiles = folder.listFiles(new FilenameFilter() {
+
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(dylibEnding);
+                }
+            });
+            dynamicLibraries.addAll(Arrays.asList(libFiles));
+        }
+
+        System.out.println(">> loading native libraries:");
+
+        ArrayList<String> loadedLibraries = new ArrayList<String>();
+        ArrayList<String> errorLibraries = new ArrayList<String>();
+
+        int lastSize = -1;
+
+        while (loadedLibraries.size() > lastSize) {
+
+            lastSize = loadedLibraries.size();
+
+            for (File f : dynamicLibraries) {
+
+                String libName = f.getAbsolutePath();
+
+                if (!loadedLibraries.contains(libName)) {
+                    System.out.println(" --> " + f.getName());
+                    try {
+                        System.load(libName);
+                        loadedLibraries.add(libName);
+                    } catch (Exception ex) {
+                        ex.printStackTrace(System.err);
+                    } catch (UnsatisfiedLinkError ex) {
+                        //
+                    }
+                }
+            }
+        }
+
+        boolean errors = loadedLibraries.size() != dynamicLibraries.size();
+
+        for (File f : dynamicLibraries) {
+            if (!loadedLibraries.contains(f.getAbsolutePath())) {
+                errorLibraries.add(f.getName());
+            }
+        }
+
+        if (errors) {
+            System.err.println(">> Not Loaded:");
+
+            for (String loadedLib : errorLibraries) {
+                System.err.println("--> " + loadedLib);
+            }
+        }
+
+        System.out.println(" --> done.");
+
+        return !errors;
+    }
+
+    /**
+     * Recursively returns files that end with at least one of the specified
+     * endings.
+     *
+     * @param location folder to search
+     * @param endings endings
+     */
+    public static ArrayList<File> listFiles(
+            File sourceLocation, String[] endings) {
+        ArrayList<File> result = new ArrayList<File>();
+
+        _getFilesRecursive(sourceLocation, result, endings);
+
+        return result;
+    }
+
+    /**
+     * Returns files that end with at least one of the specified endings.
+     *
+     * @param location folder to search
+     * @param files files
+     * @param endings endings
+     */
+    private static void _getFilesRecursive(
+            File location, Collection<File> files, String[] endings) {
+
+        if (location.isDirectory()) {
+
+            String[] children = location.list();
+            for (int i = 0; i < children.length; i++) {
+                _getFilesRecursive(
+                        new File(location, children[i]), files, endings);
+            }
+        } else {
+            // sourcelocation  is file now
+            for (String ending : endings) {
+                if (location.getAbsolutePath().endsWith(ending)) {
+                    files.add(location);
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -78,7 +250,7 @@ public class SysUtil {
      * @param path path to add
      * @throws IOException
      */
-    private static void addNativeLibraryPath(String path) throws IOException {
+    public static void addNativeLibraryPath(String path) throws IOException {
         try {
             // This enables the java.library.path to be modified at runtime
             // Idea comes from a Sun engineer at

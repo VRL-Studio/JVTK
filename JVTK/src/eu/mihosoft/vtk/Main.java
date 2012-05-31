@@ -31,6 +31,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 import javax.swing.*;
 import vtk.*;
@@ -192,8 +194,8 @@ public class Main extends JPanel implements ActionListener {
                 double xInc = getWidth() / numTilesX;
                 double yInc = getWidth() / numTilesX;
 
-                for (int yIndex = 0; yIndex < numTilesY +1; yIndex++) {
-                    for (int xIndex = 0; xIndex < numTilesX+ 1; xIndex++) {
+                for (int yIndex = 0; yIndex < numTilesY + 1; yIndex++) {
+                    for (int xIndex = 0; xIndex < numTilesX + 1; xIndex++) {
 
                         double x = xIndex * xInc;
                         double y = yIndex * yInc;
@@ -324,15 +326,26 @@ public class Main extends JPanel implements ActionListener {
         System.out.print(title + " : Press the enter key to continue");
         keyIn.nextLine();
     }
-
+    
     /**
      * Runs this application.
      *
      * @param s
      */
-    public static void main(String s[]) {
+    public static void main(String s[]) throws IOException {
 
-        SysUtil.loadLibraries("natives/");
+        File path = new File("natives");
+
+        String arch = System.getProperty("os.arch");
+        System.out.println("ARCH: " + arch);
+
+        SysUtil.loadNativeLibrariesInFolder(path, true);
+        
+        // we use custom library loading. As we plan to use this project in
+        // a flexible plugin based system it is necessary to load native
+        // libraries without modifying the PATH variable on windows
+        System.loadLibrary("jawt");
+        SysUtil.loadLibraries(path.getAbsolutePath());
 
         SwingUtilities.invokeLater(new Runnable() {
 

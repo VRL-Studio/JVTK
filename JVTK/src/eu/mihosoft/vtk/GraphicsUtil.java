@@ -107,7 +107,7 @@ public class GraphicsUtil {
             boolean nativeSupport) {
         GraphicsDevice graphicsDevice = getGraphicsDevice(screenID);
 
-        if (graphicsDevice.isFullScreenSupported() && nativeSupport) {
+        if (graphicsDevice.isFullScreenSupported() && nativeSupport && SysUtil.isMacOSX()) {
 
             if (frame instanceof JFrame) {
                 ((JFrame) frame).setResizable(false);

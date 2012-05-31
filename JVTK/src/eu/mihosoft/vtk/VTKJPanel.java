@@ -34,12 +34,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JWindow;
-import javax.swing.SwingUtilities;
 import sun.awt.image.ByteInterleavedRaster;
 import vtk.vtkPanel;
 import vtk.vtkRenderWindow;
@@ -129,12 +126,11 @@ public class VTKJPanel extends JPanel
         ren = panel.GetRenderer();
 
         // create the window
-        if (SysUtil.isMacOSX()) {
+        if (!SysUtil.isLinux()) {
             window = new JWindow();
         } else {
             window = new JFrame();
             ((JFrame) window).setUndecorated(true);
-
         }
 
         initWindow();
@@ -156,7 +152,30 @@ public class VTKJPanel extends JPanel
         addKeyListener(this);
         setBackground(new Color(120, 120, 120));
 
+        rw.SetAlphaBitPlanes(1);
+        ren.SetGradientBackground(true);
+
         setOpaque(true);
+    }
+
+    public void setBackgroundTransparent(boolean v) {
+        if (v) {
+            rw.SetAlphaBitPlanes(1);
+        } else {
+            rw.SetAlphaBitPlanes(0);
+        }
+    }
+
+    public boolean isBackgroundTransparent() {
+        return rw.GetAlphaBitPlanes() == 1;
+    }
+
+    public void setGradientBackground(boolean v) {
+        ren.SetGradientBackground(v);
+    }
+
+    public boolean isGradientBackground() {
+        return ren.GetGradientBackground();
     }
 
     /**
@@ -204,6 +223,7 @@ public class VTKJPanel extends JPanel
     public void setBackground(Color c) {
         super.setBackground(c);
         if (ren != null) {
+
             ren.SetBackground(
                     c.getRed() / 255.f,
                     c.getGreen() / 255.f,
@@ -233,7 +253,9 @@ public class VTKJPanel extends JPanel
     public void setBounds(int x, int y, int w, int h) {
         super.setBounds(x, y, w, h);
         if (window != null && !fullscreen) {
+            rw.SetSize(w, h);
             window.setSize(w, h);
+            
             contentChanged();
         }
     }
@@ -319,8 +341,10 @@ public class VTKJPanel extends JPanel
         int width = renderSize[0];
         int height = renderSize[1];
 
-        return width != img.getWidth(null) - 1
+        boolean changed = width != img.getWidth(null) - 1
                 || height != img.getHeight(null) - 1;
+
+        return changed;
     }
 
     /**
