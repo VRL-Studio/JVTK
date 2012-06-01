@@ -33,8 +33,8 @@ VTK_WRAP_JAVA=ON
 CMAKE_BUILD_TYPE=Release
 ```
 
-- Copy the content of `$VTK_INSTALL_DIR/bin` to `JVTK/natives` (`$VTK_INSTALL_DIR` is the location of the VTK
-  install folder)
+- Copy the content of `$CMAKE_INSTALL_PREFIX/vtk-5.10/bin` to `JVTK/natives` (The concrete install folder may
+  differ. Local installation locations should be preferred over global ones)
   > **NOTE**
   > On Windows it is necessary to copy the runtime dependencies to the native folder as well, even if they are
   > present in the `C:\Windows\System32` folder. If VTK has been compiled with Visual Studio 2010 at least the
