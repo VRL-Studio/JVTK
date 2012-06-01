@@ -34,7 +34,7 @@ CMAKE_BUILD_TYPE=Release
 ```
 
 - Copy the content of `$CMAKE_INSTALL_PREFIX/vtk-5.10/bin` to `JVTK/natives` (The default install location depends
-  on the VTK version and OS). It is suggested to manually change the install prefix to, e.g., `/home/user/vtk`)
+  on the VTK version and OS). It is suggested to manually change the install prefix, e.g., `/home/user/vtk`)
   > **NOTE**
   > On Windows it is necessary to copy the runtime dependencies to the native folder as well, even if they are
   > present in the `C:\Windows\System32` folder. If VTK has been compiled with Visual Studio 2010 at least the
