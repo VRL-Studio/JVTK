@@ -253,9 +253,14 @@ public class VTKJPanel extends JPanel
     public void setBounds(int x, int y, int w, int h) {
         super.setBounds(x, y, w, h);
         if (window != null && !fullscreen) {
-            rw.SetSize(w, h);
-            window.setSize(w, h);
+
+            // on windows we must manually change the size of the render window
+            if (SysUtil.isWindows()) {
+                rw.SetSize(w, h);
+            }
             
+            window.setSize(w, h);
+
             contentChanged();
         }
     }
