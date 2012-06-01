@@ -562,6 +562,8 @@ public class VTKJPanel extends JPanel
             window.setSize(1, 1);
 
             // I am so unhappy with this :(
+            // But otherwise the window will show up detached from this panel
+            // which looks very strange
             for (int i = 0; i < 15; i++) {
                 window.paint(window.getGraphics());
                 try {
