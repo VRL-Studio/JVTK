@@ -48,48 +48,10 @@ transparency and many other features.</p>
 <p>This project addresses the performance issue with custom color and sample model which allow for direct image conversion.
 This is relatively efficient for small component sizes (up to 800x600). In addition to that a fullscreen mode has been implemented to gain full render performance.</p>
 
-<h2>Dependencies</h2>
-
-<ul>
-<li>VTK 5.10</li>
-<li>Java 1.6</li>
-<li>Netbeans 7.1 (optional)</li>
-</ul><h2>Compile</h2>
-
-<ul>
-<li>Build VTK with the following options:</li>
-</ul><pre><code>BUILD_SHARED_LIBS=ON
-BUILD_TESTING=OFF
-VTK_WRAP_JAVA=ON
-CMAKE_BUILD_TYPE=Release
-</code></pre>
-
-<ul>
-<li><p>Copy the content of <code>$VTKBUILD/bin</code> to <code>JVTK/natives</code> (<code>$VTKBUILD</code> is the location of the VTK build folder)</p></li>
-<li><p>Open the <code>JVTK</code> project with NetBeans and compile (necessary preferences are already defined)</p></li>
-</ul><h2>Usage</h2>
-
-<ul>
-<li>Open the <code>JVTK</code> project with NetBeans and run it.</li>
-<li>Press the <code>Increase Alpha</code> and <code>Decrease Alpha</code> buttons to change transparency</li>
-<li>Double-Click to enter fullscreen mode</li>
-<li>Double-Click again or press <code>ESC</code> to leave fullscreen mode</li>
-</ul><blockquote>
-<p><strong>NOTE</strong>
-In fullscreen mode rendering is done with maximum performance as native rendering is used.</p>
-</blockquote>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
+<!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">JVTK maintained by <a href="https://github.com/miho">miho</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
+        <p>Published with <a href="http://pages.github.com">GitHub P
   </body>
 </html>
