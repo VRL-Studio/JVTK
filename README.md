@@ -13,7 +13,8 @@ issues when accessing the native render data from Java. In some cases however, i
 transparency and many other features.
 
 This project addresses the performance issue with custom color and sample model which allow for direct image conversion.
-This is relatively efficient for small component sizes (up to 800x600). In addition to that a fullscreen mode has been implemented to gain full render performance.
+Although not optimal, this is relatively efficient for small component sizes (up to 800x600). In addition to that a
+fullscreen mode has been implemented to gain full render performance.
 
 ## Dependencies
 
