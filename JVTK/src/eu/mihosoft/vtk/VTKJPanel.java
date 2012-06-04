@@ -44,13 +44,13 @@ import vtk.vtkRenderer;
 import vtk.vtkUnsignedCharArray;
 
 /**
- * Swing component that displays the content of a {@link vtk.vtkPanel}. In
+ * Swing component that displays the content of a {@link VTKCanvas}. In
  * contrast to the original vtk panel this component is a lightweight component.
  * Although this slows down rendering it may be usefull if transparency and
  * layering of components shall be used. This panle gives full access to the
  * offscreen image which allows to postprocess the image with AWT/Swing.
  *
- * <p>In addition to {@link vtk.vtkPanel} this component provides a fullscreen
+ * <p>In addition to {@link VTKCanvas} this component provides a fullscreen
  * mode that can be enabled either manually through
  * {@link #enterFullscreenMode() } or by double clicking on the component.</p>
  *
