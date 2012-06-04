@@ -44,13 +44,13 @@ import vtk.vtkRenderer;
 import vtk.vtkUnsignedCharArray;
 
 /**
- * Swing component that displays the content of a {@link VTKCanvas}. In
+ * Swing component that displays the content of a {@link vtk.vtkPanel}. In
  * contrast to the original vtk panel this component is a lightweight component.
  * Although this slows down rendering it may be usefull if transparency and
  * layering of components shall be used. This panle gives full access to the
  * offscreen image which allows to postprocess the image with AWT/Swing.
  *
- * <p>In addition to {@link VTKCanvas} this component provides a fullscreen
+ * <p>In addition to {@link vtk.vtkPanel} this component provides a fullscreen
  * mode that can be enabled either manually through
  * {@link #enterFullscreenMode() } or by double clicking on the component.</p>
  *
@@ -64,7 +64,7 @@ public class VTKJPanel extends JPanel
     // vtk objects
     //
     private final vtkRenderWindow rw;
-    private final VTKCanvas panel;
+    private final vtkPanel panel;
     private final vtkRenderer ren;
     //
     //fullscreen component
@@ -109,7 +109,7 @@ public class VTKJPanel extends JPanel
     public VTKJPanel() {
 
         // panel wich leaves fullscreen if ESC is pressed
-        panel = new VTKCanvas() {
+        panel = new vtkPanel() {
 
             @Override
             public void keyPressed(KeyEvent e) {
@@ -208,7 +208,7 @@ public class VTKJPanel extends JPanel
      * @see vtk.vtkPanel#Report()
      */
     public void report() {
-        getPanel().Report();
+        panel.Report();
 
     }
 
@@ -269,14 +269,14 @@ public class VTKJPanel extends JPanel
      * Renders this panel.
      */
     private synchronized void render() {
-        getPanel().lock();
+        panel.lock();
 
-        getPanel().Render();
+        panel.Render();
         renderContent = ren.VisibleActorCount() > 0;
         updateImage();
         contentChanged = false;
 
-        getPanel().unlock();
+        panel.unlock();
     }
 
     /**
@@ -435,13 +435,13 @@ public class VTKJPanel extends JPanel
         contentChanged();
         repaint();
 
-        getPanel().mouseClicked(e);
+        panel.mouseClicked(e);
 
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        getPanel().mousePressed(e);
+        panel.mousePressed(e);
 //        render();
         contentChanged();
         repaint();
@@ -449,7 +449,7 @@ public class VTKJPanel extends JPanel
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        getPanel().mouseReleased(e);
+        panel.mouseReleased(e);
     }
 
     @Override
@@ -459,18 +459,18 @@ public class VTKJPanel extends JPanel
 
     @Override
     public void mouseExited(MouseEvent e) {
-        getPanel().mouseMoved(e);
+        panel.mouseMoved(e);
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        getPanel().mouseMoved(e);
+        panel.mouseMoved(e);
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
 
-        getPanel().mouseDragged(e);
+        panel.mouseDragged(e);
 //        render();
         contentChanged();
         repaint();
@@ -479,19 +479,19 @@ public class VTKJPanel extends JPanel
 
     @Override
     public void keyTyped(KeyEvent e) {
-        getPanel().keyReleased(e);
+        panel.keyReleased(e);
 //        render();
         contentChanged();
         repaint();
     }
 
     public void HardCopy(String filename, int mag) {
-        getPanel().HardCopy(filename, mag);
+        panel.HardCopy(filename, mag);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        getPanel().keyReleased(e);
+        panel.keyReleased(e);
 //        render();
         contentChanged();
         repaint();
@@ -499,7 +499,7 @@ public class VTKJPanel extends JPanel
 
     @Override
     public void keyPressed(KeyEvent e) {
-        getPanel().keyPressed(e);
+        panel.keyPressed(e);
 //        render();
         contentChanged();
         repaint();
@@ -509,7 +509,7 @@ public class VTKJPanel extends JPanel
      * Disposes this component.
      */
     public void dispose() {
-        getPanel().Delete();
+        panel.Delete();
         window.dispose();
     }
 
@@ -546,7 +546,7 @@ public class VTKJPanel extends JPanel
      */
     private void initWindow() {
         // we add the panel to give it access to native memory etc.
-        window.add(getPanel());
+        window.add(panel);
 
         // unfortunately a window has to be visible to be initialized.
         // that is why we toggle visibility
@@ -598,12 +598,5 @@ public class VTKJPanel extends JPanel
                 });
             }
         }, 10);
-    }
-
-    /**
-     * @return the panel
-     */
-    public VTKCanvas getPanel() {
-        return panel;
     }
 }
