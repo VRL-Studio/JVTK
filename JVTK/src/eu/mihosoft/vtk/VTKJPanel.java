@@ -64,7 +64,7 @@ public class VTKJPanel extends JPanel
     // vtk objects
     //
     private final vtkRenderWindow rw;
-    private final vtkPanel panel;
+    private final VTKCanvas panel;
     private final vtkRenderer ren;
     //
     //fullscreen component
@@ -109,7 +109,7 @@ public class VTKJPanel extends JPanel
     public VTKJPanel() {
 
         // panel wich leaves fullscreen if ESC is pressed
-        panel = new vtkPanel() {
+        panel = new VTKCanvas() {
 
             @Override
             public void keyPressed(KeyEvent e) {
@@ -598,5 +598,12 @@ public class VTKJPanel extends JPanel
                 });
             }
         }, 10);
+    }
+
+    /**
+     * @return the panel
+     */
+    public VTKCanvas getPanel() {
+        return panel;
     }
 }
