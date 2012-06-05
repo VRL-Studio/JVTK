@@ -49,7 +49,7 @@ import vtk.*;
  *
  * @author Kitware
  */
-public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
+public class VTKCanvas extends VTKPanel implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
 
     private static final long serialVersionUID = 1L;
     protected vtkGenericRenderWindowInteractor iren = new vtkGenericRenderWindowInteractor();
@@ -58,6 +58,16 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
     protected int shiftPressed = 0;
     protected vtkPlaneWidget pw = new vtkPlaneWidget();
     protected vtkBoxWidget bw = new vtkBoxWidget();
+    
+    private double defaultCamPosX = 0;
+    private double defaultCamPosY = 0;
+    private double defaultCamPosZ = 8;
+    
+    public void setDefaultCamPos(double x, double y, double z) {
+        setDefaultCamPosX(x);
+        setDefaultCamPosY(y);
+        setDefaultCamPosZ(z);
+    }
 
     static {
         // load up hybrid for 3d widgets
@@ -175,6 +185,15 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
             iren.ConfigureEvent();
             UnLock();
         }
+    }
+
+    public void resetCamera() {
+        Lock();
+        ren.ResetCamera();
+        cam.SetPosition(getDefaultCamPosX(), getDefaultCamPosY(), getDefaultCamPosZ());
+        cam.SetRoll(0);
+        UpdateLight();
+        UnLock();
     }
 
     public void mouseClicked(MouseEvent e) {
@@ -312,6 +331,48 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
     }
 
     public void keyReleased(KeyEvent e) {
+    }
+
+    /**
+     * @return the defaultCamPosX
+     */
+    public double getDefaultCamPosX() {
+        return defaultCamPosX;
+    }
+
+    /**
+     * @param defaultCamPosX the defaultCamPosX to set
+     */
+    public void setDefaultCamPosX(double defaultCamPosX) {
+        this.defaultCamPosX = defaultCamPosX;
+    }
+
+    /**
+     * @return the defaultCamPosY
+     */
+    public double getDefaultCamPosY() {
+        return defaultCamPosY;
+    }
+
+    /**
+     * @param defaultCamPosY the defaultCamPosY to set
+     */
+    public void setDefaultCamPosY(double defaultCamPosY) {
+        this.defaultCamPosY = defaultCamPosY;
+    }
+
+    /**
+     * @return the defaultCamPosZ
+     */
+    public double getDefaultCamPosZ() {
+        return defaultCamPosZ;
+    }
+
+    /**
+     * @param defaultCamPosZ the defaultCamPosZ to set
+     */
+    public void setDefaultCamPosZ(double defaultCamPosZ) {
+        this.defaultCamPosZ = defaultCamPosZ;
     }
 
     private class DelayAction implements ActionListener {

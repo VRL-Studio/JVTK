@@ -531,6 +531,16 @@ public class VTKJPanel extends JPanel
     public float getContentAlpha() {
         return contentAlpha;
     }
+    
+    public void resetCamera() {
+        panel.resetCamera();
+        contentChanged();
+        repaint();
+    }
+    
+    public void setDefaultCamPos(double x, double y, double z) {
+        panel.setDefaultCamPos(x, y, z);
+    }
 
     /**
      * Defines the content alpha value (defines transparency of vtk content).
