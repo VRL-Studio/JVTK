@@ -57,7 +57,7 @@ import vtk.vtkUnsignedCharArray;
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public class VTKJPanel extends JPanel
-        implements MouseListener, MouseMotionListener, KeyListener {
+        implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {
 
     private static final long serialVersionUID = 1L;
     //
@@ -149,6 +149,7 @@ public class VTKJPanel extends JPanel
 
         addMouseListener(this);
         addMouseMotionListener(this);
+        addMouseWheelListener(this);
         addKeyListener(this);
         setBackground(new Color(120, 120, 120));
 
@@ -474,7 +475,14 @@ public class VTKJPanel extends JPanel
 //        render();
         contentChanged();
         repaint();
-
+    }
+    
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        panel.mouseWheelMoved(e);
+//        render();
+        contentChanged();
+        repaint();
     }
 
     @Override
@@ -606,4 +614,6 @@ public class VTKJPanel extends JPanel
     public VTKCanvas getPanel() {
         return panel;
     }
+
+    
 }

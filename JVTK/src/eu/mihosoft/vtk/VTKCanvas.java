@@ -27,30 +27,20 @@
  */
 package eu.mihosoft.vtk;
 
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 
 import javax.swing.Timer;
 import vtk.*;
 
 /**
  * Almost exact copy of original {@link vtk.vtkCanvas}.
- * 
- * It is used internally only. We can
- * now study and experiment without the need to change the original code.
- * We will probably change mouse gestures and some keys.
- * 
+ *
+ * It is used internally only. We can now study and experiment without the need
+ * to change the original code. We will probably change mouse gestures and some
+ * keys.
+ *
  * @author Michael Hoffer <info@michaelhoffer.de>
- * 
+ *
  * <p><b>Original Description:</b></p>
  *
  * Java AWT component that encapsulate vtkRenderWindow, vtkRenderer, vtkCamera,
@@ -59,7 +49,8 @@ import vtk.*;
  *
  * @author Kitware
  */
-public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionListener, KeyListener {
+public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
+
     private static final long serialVersionUID = 1L;
     protected vtkGenericRenderWindowInteractor iren = new vtkGenericRenderWindowInteractor();
     protected Timer timer = new Timer(10, new VTKCanvas.DelayAction());
@@ -103,10 +94,12 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
         bw.AddObserver("EnableEvent", this, "BeginBoxInteraction");
         pw.SetKeyPressActivationValue('l');
         bw.SetKeyPressActivationValue('b');
+
         pw.SetInteractor(iren);
         bw.SetInteractor(iren);
 
         addComponentListener(new ComponentAdapter() {
+
             public void componentResized(ComponentEvent event) {
                 // The Canvas is being resized, get the new size
                 int width = getWidth();
@@ -120,19 +113,23 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
         // Setup same interactor style than vtkPanel
         vtkInteractorStyleTrackballCamera style = new vtkInteractorStyleTrackballCamera();
         iren.SetInteractorStyle(style);
+
+        addMouseWheelListener(this);
     }
 
     public void StartTimer() {
-        if (timer.isRunning())
+        if (timer.isRunning()) {
             timer.stop();
+        }
 
         timer.setRepeats(true);
         timer.start();
     }
 
     public void DestroyTimer() {
-        if (timer.isRunning())
+        if (timer.isRunning()) {
             timer.stop();
+        }
     }
 
     /**
@@ -184,8 +181,9 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
     }
 
     public void mousePressed(MouseEvent e) {
-        if (ren.VisibleActorCount() == 0)
+        if (ren.VisibleActorCount() == 0) {
             return;
+        }
         Lock();
         rw.SetDesiredUpdateRate(5.0);
         lastX = e.getX();
@@ -259,8 +257,9 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
     }
 
     public void mouseDragged(MouseEvent e) {
-        if (ren.VisibleActorCount() == 0)
+        if (ren.VisibleActorCount() == 0) {
             return;
+        }
 
         ctrlPressed = (e.getModifiers() & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK ? 1 : 0;
         shiftPressed = (e.getModifiers() & InputEvent.SHIFT_MASK) == InputEvent.SHIFT_MASK ? 1 : 0;
@@ -274,12 +273,31 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
         UpdateLight();
     }
 
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        ctrlPressed = (e.getModifiers() & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK ? 1 : 0;
+        shiftPressed = (e.getModifiers() & InputEvent.SHIFT_MASK) == InputEvent.SHIFT_MASK ? 1 : 0;
+
+        iren.SetEventInformationFlipY(e.getX(), e.getY(), ctrlPressed, shiftPressed, '0', 0, "0");
+
+        Lock();
+        if (e.getWheelRotation() > 0) {
+            System.out.println("Forward");
+            iren.MouseWheelForwardEvent();
+        } else {
+            System.out.println("Backward");
+            iren.MouseWheelBackwardEvent();
+        }
+        UnLock();
+    }
+
     public void keyTyped(KeyEvent e) {
     }
 
     public void keyPressed(KeyEvent e) {
-        if (ren.VisibleActorCount() == 0)
+        if (ren.VisibleActorCount() == 0) {
             return;
+        }
         char keyChar = e.getKeyChar();
 
         ctrlPressed = (e.getModifiers() & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK ? 1 : 0;
@@ -297,6 +315,7 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
     }
 
     private class DelayAction implements ActionListener {
+
         public void actionPerformed(ActionEvent evt) {
             Lock();
             iren.TimerEvent();
