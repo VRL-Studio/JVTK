@@ -61,7 +61,7 @@ public class VTKCanvas extends VTKPanel implements MouseListener, MouseMotionLis
     
     private double defaultCamPosX = 0;
     private double defaultCamPosY = 0;
-    private double defaultCamPosZ = 8;
+    private double defaultCamPosZ = 6;
     
     public void setDefaultCamPos(double x, double y, double z) {
         setDefaultCamPosX(x);
@@ -192,6 +192,7 @@ public class VTKCanvas extends VTKPanel implements MouseListener, MouseMotionLis
         ren.ResetCamera();
         cam.SetPosition(getDefaultCamPosX(), getDefaultCamPosY(), getDefaultCamPosZ());
         cam.SetRoll(0);
+        ren.ResetCameraClippingRange();
         UpdateLight();
         UnLock();
     }
