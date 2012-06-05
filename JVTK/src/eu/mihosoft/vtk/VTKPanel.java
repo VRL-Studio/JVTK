@@ -203,6 +203,7 @@ class VTKPanel extends vtkPanel
                 if (windowset == 0) {
                     // set the window id and the active camera
                     cam = ren.GetActiveCamera();
+                    
                     if (lightingset == 0) {
                         ren.AddLight(lgt);
                         lgt.SetPosition(cam.GetPosition());
