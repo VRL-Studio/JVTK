@@ -54,6 +54,10 @@ public class Main extends JPanel implements ActionListener {
     private JPanel buttons;
     private JToggleButton slicesButton;
     private JToggleButton isoButton;
+    
+    // we need global reference to widgets that are not explicitly
+    // added to renderer. otherwise the VTK GC will delete related memory
+    private vtkOrientationMarkerWidget axesOrientation;
 
     /*
      * Constructor - generates visualization pipeline and adds actors
@@ -230,6 +234,29 @@ public class Main extends JPanel implements ActionListener {
          */
         renWin.getRenderer().GetActiveCamera().Dolly(0.15);
 
+
+        
+        // add axes
+        vtkAxesActor axesActor = new vtkAxesActor();
+        axesActor.AxisLabelsOn();
+        axesActor.SetShaftTypeToCylinder();
+        axesActor.SetCylinderRadius(0.05);
+        axesActor.SetConeRadius(0.5);
+        axesActor.SetNormalizedTipLength(0.3, 0.3, 0.3);
+        axesActor.SetConeResolution(32);
+        axesActor.SetAxisLabels(0);
+        
+        // we need global reference to widgets that are not explicitly
+        // added to renderer. otherwise the VTK GC will delete related memory
+        axesOrientation = new vtkOrientationMarkerWidget();
+        axesOrientation.SetOrientationMarker(axesActor);
+        axesOrientation.SetInteractor(renWin.getPanel().getRenderWindowInteractor());
+        axesOrientation.SetInteractive(0);
+        axesOrientation.SetViewport(0, 0, 0.25, 0.25);
+        axesOrientation.SetOutlineColor(1.0, 1.0, 1.0);
+        axesOrientation.SetEnabled(1);
+
+
         /**
          * ** 6) CREATE PANEL FOR BUTTONS ***
          */
@@ -365,6 +392,8 @@ public class Main extends JPanel implements ActionListener {
 
                 panel.repaint();
 
+                // we run automatic garbage collection to check whether
+                // memory/threading related issues exist
                 GraphicsUtil.invokeLater(new Runnable() {
 
                     public void run() {

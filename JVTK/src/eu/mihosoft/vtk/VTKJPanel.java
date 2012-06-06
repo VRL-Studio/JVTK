@@ -471,6 +471,7 @@ public class VTKJPanel extends JPanel
     @Override
     public void mouseEntered(MouseEvent e) {
         this.requestFocus();
+        panel.mouseEntered(e);;
     }
 
     @Override
@@ -480,7 +481,7 @@ public class VTKJPanel extends JPanel
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        panel.mouseMoved(e);
+        panel.mouseMoved(e);;
     }
 
     @Override
