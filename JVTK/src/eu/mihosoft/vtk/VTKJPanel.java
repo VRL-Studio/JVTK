@@ -257,7 +257,9 @@ public class VTKJPanel extends JPanel
 
             // on windows we must manually change the size of the render window
             if (SysUtil.isWindows()) {
+                panel.lock();
                 rw.SetSize(w, h);
+                panel.unlock();
             }
             
             window.setSize(w, h);
@@ -271,13 +273,15 @@ public class VTKJPanel extends JPanel
      */
     private synchronized void render() {
         panel.lock();
-
         panel.Render();
+        panel.unlock();
+        
+        
         renderContent = ren.VisibleActorCount() > 0;
         updateImage();
         contentChanged = false;
 
-        panel.unlock();
+        
     }
 
     /**
@@ -393,10 +397,13 @@ public class VTKJPanel extends JPanel
 
             // resize hidden frame if not in fullscreen mode
             if (!fullscreen) {
+                panel.lock();
                 window.setSize(getWidth(), getHeight());
+                panel.unlock();
             }
         }
 
+        panel.lock();
         // retrieve the pixeldata from render window
         vtkUnsignedCharArray vtkPixelData = new vtkUnsignedCharArray();
         ren.GetRenderWindow().GetRGBACharPixelData(0, 0, width, height,
@@ -416,6 +423,7 @@ public class VTKJPanel extends JPanel
 
         // finally, create an image
         img = new BufferedImage(colorModel, mirrorRaster, false, null);
+        panel.unlock();
     }
 
     /**
@@ -607,7 +615,7 @@ public class VTKJPanel extends JPanel
      */
     private void repair() {
         // This is a hack!
-        // I put his method to the bottom because no one should read its code.
+        // I put this method to the bottom because no one should read its code.
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
 

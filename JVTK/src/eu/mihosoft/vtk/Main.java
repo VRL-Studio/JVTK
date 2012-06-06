@@ -34,6 +34,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 import vtk.*;
 
@@ -326,7 +327,7 @@ public class Main extends JPanel implements ActionListener {
         System.out.print(title + " : Press the enter key to continue");
         keyIn.nextLine();
     }
-    
+
     /**
      * Runs this application.
      *
@@ -338,7 +339,7 @@ public class Main extends JPanel implements ActionListener {
 
         String arch = System.getProperty("os.arch");
         System.out.println("ARCH: " + arch);
-        
+
         // we use custom library loading. As we plan to use this project in
         // a flexible plugin based system it is necessary to load native
         // libraries without modifying the PATH variable on windows
@@ -363,6 +364,14 @@ public class Main extends JPanel implements ActionListener {
                 frame.setVisible(true);
 
                 panel.repaint();
+
+                GraphicsUtil.invokeLater(new Runnable() {
+
+                    public void run() {
+                        vtkObject.JAVA_OBJECT_MANAGER.getAutoGarbageCollector().SetAutoGarbageCollection(true);
+                        vtkObject.JAVA_OBJECT_MANAGER.getAutoGarbageCollector().SetScheduleTime(1, TimeUnit.SECONDS);
+                    }
+                });
             }
         });
     }

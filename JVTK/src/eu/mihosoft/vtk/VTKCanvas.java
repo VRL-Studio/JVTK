@@ -49,7 +49,7 @@ import vtk.*;
  *
  * @author Kitware
  */
-public class VTKCanvas extends VTKPanel implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
+public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
 
     private static final long serialVersionUID = 1L;
     protected vtkGenericRenderWindowInteractor iren = new vtkGenericRenderWindowInteractor();
