@@ -289,6 +289,13 @@ public class VTKJPanel extends JPanel
     public void contentChanged() {
         contentChanged = true;
     }
+    
+    /**
+     * Deletes the render content and the associated buffer image
+     */
+    public void deleteContent() {
+        img = null;
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -347,7 +354,7 @@ public class VTKJPanel extends JPanel
         int width = renderSize[0];
         int height = renderSize[1];
 
-        boolean changed = width != img.getWidth(null) - 1
+        boolean changed = img == null || width != img.getWidth(null) - 1
                 || height != img.getHeight(null) - 1;
 
         return changed;
