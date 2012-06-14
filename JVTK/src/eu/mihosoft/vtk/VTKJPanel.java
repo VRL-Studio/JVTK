@@ -261,7 +261,7 @@ public class VTKJPanel extends JPanel
                 rw.SetSize(w, h);
                 panel.unlock();
             }
-            
+
             window.setSize(w, h);
 
             contentChanged();
@@ -275,13 +275,13 @@ public class VTKJPanel extends JPanel
         panel.lock();
         panel.Render();
         panel.unlock();
-        
-        
+
+
         renderContent = ren.VisibleActorCount() > 0;
         updateImage();
         contentChanged = false;
 
-        
+
     }
 
     /**
@@ -293,7 +293,7 @@ public class VTKJPanel extends JPanel
     public void contentChanged() {
         contentChanged = true;
     }
-    
+
     /**
      * Deletes the render content and the associated buffer image
      */
@@ -492,7 +492,7 @@ public class VTKJPanel extends JPanel
         contentChanged();
         repaint();
     }
-    
+
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         panel.mouseWheelMoved(e);
@@ -547,13 +547,13 @@ public class VTKJPanel extends JPanel
     public float getContentAlpha() {
         return contentAlpha;
     }
-    
+
     public void resetCamera() {
         panel.resetCamera();
         contentChanged();
         repaint();
     }
-    
+
     public void setDefaultCamPos(double x, double y, double z) {
         panel.setDefaultCamPos(x, y, z);
     }
@@ -569,12 +569,19 @@ public class VTKJPanel extends JPanel
         this.contentAlpha = contentAlpha;
         contentChanged();
     }
+
+    /**
+     * @return the panel
+     */
+    public VTKCanvas getPanel() {
+        return panel;
+    }
+
     //
     //****************************************************
     //*       !!! CAUTION: UGLY METHODS BELOW !!!        *
     //****************************************************
     //
-
     /**
      * Initializes the internal window.
      */
@@ -633,13 +640,4 @@ public class VTKJPanel extends JPanel
             }
         }, 10);
     }
-
-    /**
-     * @return the panel
-     */
-    public VTKCanvas getPanel() {
-        return panel;
-    }
-
-    
 }
