@@ -110,7 +110,6 @@ public class VTKJPanel extends JPanel
 
         // panel wich leaves fullscreen if ESC is pressed
         panel = new VTKCanvas() {
-
             @Override
             public void keyPressed(KeyEvent e) {
 
@@ -137,7 +136,6 @@ public class VTKJPanel extends JPanel
 
         // double click will leave fullscreen mode
         panel.addMouseListener(new MouseAdapter() {
-
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
@@ -348,9 +346,7 @@ public class VTKJPanel extends JPanel
      * Indicates whether the render window and the offscreen image differ in
      * size.
      *
-     * @return
-     * <code>true</code> if sizes differ;
-     * <code>false</code> otherwise
+     * @return <code>true</code> if sizes differ; <code>false</code> otherwise
      */
     private boolean sizeChanged() {
 
@@ -548,14 +544,55 @@ public class VTKJPanel extends JPanel
         return contentAlpha;
     }
 
+    /**
+     * Resets the camera. Additionally this method triggers a repaint event.
+     */
     public void resetCamera() {
         panel.resetCamera();
         contentChanged();
         repaint();
     }
 
+    /**
+     * Defines the default camera position (used when resetting the camera).
+     *
+     * @param x
+     * @param y
+     * @param z
+     */
     public void setDefaultCamPos(double x, double y, double z) {
         panel.setDefaultCamPos(x, y, z);
+    }
+
+    /**
+     * Defines whether to use parallel projection (disabled by default). This
+     * method triggers a repaint event.
+     *
+     * @param b defines whether to enable parallel projection
+     */
+    public void setParallelProjection(boolean b) {
+
+        panel.lock();
+
+        int val = b ? 1 : 0;
+        ren.GetActiveCamera().SetParallelProjection(val);
+
+        panel.unlock();
+
+        contentChanged();
+        repaint();
+    }
+
+    /**
+     * Indicates whether parallel projection is enabled.
+     *
+     * @return <code>true</code> if parallel projection is enabled;
+     * <code>false</code> otherwise
+     */
+    public boolean isParallelProjection() {
+        int val = ren.GetActiveCamera().GetParallelProjection();
+
+        return val == 1 ? true : false;
     }
 
     /**
@@ -626,11 +663,9 @@ public class VTKJPanel extends JPanel
         // I put this method to the bottom because no one should read its code.
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
-
             @Override
             public void run() {
                 GraphicsUtil.invokeLater(new Runnable() {
-
                     @Override
                     public void run() {
                         contentChanged();

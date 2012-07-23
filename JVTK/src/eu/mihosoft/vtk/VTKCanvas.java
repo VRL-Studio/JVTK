@@ -110,6 +110,7 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
 
         addComponentListener(new ComponentAdapter() {
 
+            @Override
             public void componentResized(ComponentEvent event) {
                 // The Canvas is being resized, get the new size
                 int width = getWidth();
@@ -176,6 +177,7 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
         System.out.println("Box widget begin interaction");
     }
 
+    @Override
     public void setSize(int x, int y) {
         super.setSize(x, y);
         if (windowset == 1) {
@@ -187,6 +189,7 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
         }
     }
 
+    @Override
     public void resetCamera() {
         Lock();
         ren.ResetCamera();
@@ -197,9 +200,11 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
         UnLock();
     }
 
+    @Override
     public void mouseClicked(MouseEvent e) {
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         if (ren.VisibleActorCount() == 0) {
             return;
@@ -224,6 +229,7 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
         UnLock();
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
         rw.SetDesiredUpdateRate(0.01);
 
@@ -251,17 +257,20 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
         }
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
         this.requestFocus();
         iren.SetEventInformationFlipY(e.getX(), e.getY(), 0, 0, '0', 0, "0");
         iren.EnterEvent();
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
         iren.SetEventInformationFlipY(e.getX(), e.getY(), 0, 0, '0', 0, "0");
         iren.LeaveEvent();
     }
 
+    @Override
     public void mouseMoved(MouseEvent e) {
         lastX = e.getX();
         lastY = e.getY();
@@ -276,6 +285,7 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
         UnLock();
     }
 
+    @Override
     public void mouseDragged(MouseEvent e) {
         if (ren.VisibleActorCount() == 0) {
             return;
@@ -311,9 +321,11 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
         UnLock();
     }
 
+    @Override
     public void keyTyped(KeyEvent e) {
     }
 
+    @Override
     public void keyPressed(KeyEvent e) {
         if (ren.VisibleActorCount() == 0) {
             return;
@@ -331,6 +343,7 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
         UnLock();
     }
 
+    @Override
     public void keyReleased(KeyEvent e) {
     }
 
