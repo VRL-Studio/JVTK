@@ -312,10 +312,8 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
 
         Lock();
         if (e.getWheelRotation() > 0) {
-            System.out.println("Forward");
             iren.MouseWheelForwardEvent();
         } else {
-            System.out.println("Backward");
             iren.MouseWheelBackwardEvent();
         }
         UnLock();
@@ -391,6 +389,7 @@ public class VTKCanvas extends vtkPanel implements MouseListener, MouseMotionLis
 
     private class DelayAction implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent evt) {
             Lock();
             iren.TimerEvent();
