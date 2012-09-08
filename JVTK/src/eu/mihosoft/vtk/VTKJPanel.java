@@ -47,7 +47,7 @@ import vtk.vtkUnsignedCharArray;
  * Swing component that displays the content of a {@link vtk.vtkPanel}. In
  * contrast to the original vtk panel this component is a lightweight component.
  * Although this slows down rendering it may be usefull if transparency and
- * layering of components shall be used. This panle gives full access to the
+ * layering of components shall be used. This panel gives full access to the
  * offscreen image which allows to postprocess the image with AWT/Swing.
  *
  * <p>In addition to {@link vtk.vtkPanel} this component provides a fullscreen
